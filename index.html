@@ -1,0 +1,46 @@
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Token Generator</title>
+  <meta name="description" content="Token Generator">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  <style>
+	
+  </style>
+</head>
+<body>
+	<h1>Token Generator</h1>
+	<input type="text" id="tokenToEncrypt" value="aewe7895"/>
+	<button id="generate">Create Token</button>
+	<h2>Token:</h2>
+	<span id="token"></span>	
+  <script>
+    const button = document.getElementById("generate");  
+    const output = document.getElementById("token");  
+    
+	function copy() {
+	  navigator.permissions.query({name: "clipboard-write"}).then(result => {
+         if (result.state == "granted" || result.state == "prompt") {
+           navigator.clipboard.writeText(output.innerHTML);
+          }
+      });
+	}
+    
+	function createToken() {
+      let date = new Date();
+      const text = document.getElementById("tokenToEncrypt").value;
+      
+      date = `${date.getUTCFullYear()}${(date.getUTCMonth() + 1).toString().padStart(2, '0')}${(date.getUTCDate()).toString().padStart(2, '0')}${(date.getUTCHours()).toString().padStart(2, '0')}`;
+      
+	  const valueToHash     = `${text}:${date}`;		
+	  const tokenValue     = CryptoJS.MD5(valueToHash).toString();
+	
+	  output.innerHTML = tokenValue;	
+	  copy();
+    }
+    
+    button.addEventListener("click", createToken);
+    createToken();	
+  </script>
+</body>
+</html>
